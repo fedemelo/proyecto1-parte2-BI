@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import {
     Typography,
     Grid,
-    Button,
-    TextField,
+    Button,    
 } from "@mui/material";
 import ClassifyExcel from "../components/ClassifyExcel";
 import ClassifyText from "../components/ClassifyText";
+import ods6Image from "../public/ODS6.jpg";
+import ods7Image from "../public/ODS7.jpg";
+import ods16Image from "../public/ODS16.jpg";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/MainPage.css';
 
 
@@ -59,10 +60,18 @@ const MainPage: React.FC = () => {
 // Objective component
 const Objective: React.FC<{ num: number; onClick: () => void }> = ({ num, onClick }) => (
     <Grid md={4}>
-        <Button variant="contained" onClick={onClick}>
-            ODS {num}
-        </Button>
+        <div id="white-button">
+            <Button variant="contained" onClick={onClick} id="white-button">
+                <img
+                    src={num === 6 ? ods6Image : num === 7 ? ods7Image : ods16Image}
+                    alt={`ODS ${num}`}
+                    id="button-img"
+                />
+            </Button>
+        </div>
     </Grid>
 );
+
+
 
 export default MainPage;

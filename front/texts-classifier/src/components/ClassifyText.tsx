@@ -4,7 +4,8 @@ import {
     Button,
     TextField,
 } from '@mui/material';
-
+import '../styles/ClassifyText.css';
+ 
 const ClassifyText: React.FC = () => {
     const [message, setMessage] = useState<string>('');
     const [category, setCategory] = useState<string>('');
@@ -40,17 +41,16 @@ const ClassifyText: React.FC = () => {
     return (
         <div>
             <TextField
-                id="text-to-classify"
-                label="Ingrese el texto a clasificar en el ODS 6, 7 o 16"
-                variant="outlined"
-                value={message}
-                onChange={handleInputChange}
+                 id="text-to-classify"
+                 label="Ingrese el texto a clasificar en el ODS 6, 7 o 16"
+                 variant="outlined"
+                 value={message}
+                 onChange={handleInputChange}
             />
 
             <Button
                 id="classify-button"
                 variant="contained"
-                color="primary"
                 onClick={handleSendClick}>
                 Clasificar
             </Button>
@@ -58,10 +58,8 @@ const ClassifyText: React.FC = () => {
 
             <Typography
                 id="classification-result"
-                variant="h6"
-                color="primary"
-            >
-                Clasificación: {category != "" ? "ODS " + category : "No se ha ingresado un texto"}
+                variant="h1"            >
+                Clasificación: {category !== "" ? "ODS " + category : "No se ha ingresado un texto"}
             </Typography>
 
         </div>

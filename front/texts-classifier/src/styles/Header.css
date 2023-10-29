@@ -1,3 +1,16 @@
 #headerContainer {
-    margin-bottom: 5ex
+    margin-bottom: 5ex;
+    align-content: center;
+}
+
+#headerImage {
+    max-width: 80%;
+    height: auto;
+    margin: 0 auto;
+}
+
+#headerTitle {
+    margin-top: 30px; 
+    text-align: center; 
+    color:black;
 }

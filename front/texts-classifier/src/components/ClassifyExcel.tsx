@@ -3,6 +3,8 @@ import {
     Typography,
     Button,
 } from '@mui/material';
+import '../styles/ClassifyExcel.css';
+
 
 const ClassifyExcel: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -55,6 +57,7 @@ const ClassifyExcel: React.FC = () => {
             />
 
             <Button
+                id="classify-button"
                 variant="contained"
                 color="primary"
                 onClick={sendClick}

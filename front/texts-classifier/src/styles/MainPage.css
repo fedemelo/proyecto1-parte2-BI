@@ -1,9 +1,25 @@
 #main-grid {
     margin-left: 5ex;
+    display: flex;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Centra los elementos verticalmente */
+}
+#white-button {
+    background-color: white;
+    padding: 0;
+    justify-content: center;
+    text-align: center; 
+    margin-top: 20px; 
+}
+
+#button-img {
+    max-width: 28cqb; 
+    height: auto; 
 }
 
 #classify-text-grid {
-    margin-top: 5ex;
+    margin-top: 12ex;
+    text-align: center;
 }
 
 #classify-excel-grid  {
