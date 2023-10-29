@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from src.config.settings import Settings
-from src.routers import excerpt
+from src.routers import excerpt, login
 from src.config.db_settings import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,6 +12,7 @@ app = FastAPI(title=settings.PROJECT_NAME)
 Base.metadata.create_all(bind=engine)
 
 app.include_router(excerpt.router)
+app.include_router(login.router)
 
 app.add_middleware(
     CORSMiddleware,
