@@ -25,6 +25,14 @@ def get_excerpt_by_text(db: Session, text: str) -> ExcerptModel:
     )
 
 
+def get_excerpts_by_category(db: Session, category: int) -> List[ExcerptModel]:
+    return (
+        db.query(ExcerptModel)
+        .filter(ExcerptModel.category == category)
+        .all()
+    )
+
+
 def get_excerpts(db: Session) -> List[ExcerptModel]:
     return db.query(ExcerptModel).all()
 

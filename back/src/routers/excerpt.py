@@ -22,6 +22,14 @@ def get_excerpt(id: str, db: Session = Depends(get_db)) -> ExcerptResponse:
     return db_excerpt
 
 
+@router.get("/ods/{category}", response_model=List[ExcerptResponse], status_code=200)
+def get_excerpt_by_category(category: int, db: Session = Depends(get_db)) -> ExcerptResponse:
+    if not (category == 6 or category == 7 or category == 16):
+        raise HTTPException(
+            status_code=404, detail=f"The model can only classify categories 6, 7 and 16")
+    return service.get_excerpts_by_category(db, category)
+
+
 @router.get("/", response_model=List[ExcerptResponse], status_code=200)
 def get_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
     return service.get_excerpts(db)
