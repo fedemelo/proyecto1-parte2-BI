@@ -2,7 +2,7 @@ from io import BytesIO
 from fastapi import UploadFile
 from pandas import read_excel, DataFrame
 from sqlalchemy.orm import Session
-from classifier.classifier import classify_multiple_texts
+from src.services.classifier import classify_multiple_texts, classify_single_text
 from src.models.excerpt import Excerpt as ExcerptModel
 from src.schemas.excerpt import ExcerptCreate, ExcerptResponse
 from typing import List
@@ -42,8 +42,7 @@ def create_excerpt(db: Session, excerpt: ExcerptCreate) -> ExcerptModel:
 
 
 def classify_text(text: str) -> int:
-    # TODO
-    return 16
+    return classify_single_text(text) 
 
 
 def create_excerpts(db: Session, excerpts: List[ExcerptCreate]) -> List[ExcerptModel]:

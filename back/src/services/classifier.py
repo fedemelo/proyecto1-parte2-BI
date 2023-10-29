@@ -1,3 +1,4 @@
+import os
 from joblib import load
 import pandas as pd
 from nltk.stem import SnowballStemmer
