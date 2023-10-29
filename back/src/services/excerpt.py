@@ -1,4 +1,8 @@
+from io import BytesIO
+from fastapi import UploadFile
+from pandas import read_excel, DataFrame
 from sqlalchemy.orm import Session
+from classifier.classifier import classify_multiple_texts
 from src.models.excerpt import Excerpt as ExcerptModel
 from src.schemas.excerpt import ExcerptCreate, ExcerptResponse
 from typing import List
@@ -44,6 +48,28 @@ def classify_text(text: str) -> int:
 
 def create_excerpts(db: Session, excerpts: List[ExcerptCreate]) -> List[ExcerptModel]:
     return list(map(lambda excerpt: create_excerpt(db, excerpt), excerpts))
+
+
+def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
+    df = read_excel(BytesIO(file.file.read()))
+    
+    if len(df.columns) > 1:
+        return (False, "The dataframe must have only one column")
+    elif len(df.columns) < 1:
+        return (False, "The dataframe must have at least one column")
+
+    answ_df = classify_multiple_texts(df)
+
+    for _, row in answ_df.iterrows():
+        db_excerpt = ExcerptModel(
+            id=str(uuid4()),
+            text=row[df.columns[0]],
+            category=row["sdg"]
+        )
+        db.add(db_excerpt)
+        db.commit()
+        db.refresh(db_excerpt)
+    return True, answ_df.to_json()
 
 
 def update_excerpt(db: Session, id: str, excerpt: ExcerptResponse) -> ExcerptModel:

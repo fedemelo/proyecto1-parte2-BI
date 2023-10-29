@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from src.schemas.excerpt import ExcerptResponse, ExcerptCreate
 import src.services.excerpt as service
@@ -39,6 +39,19 @@ def create_excerpt(excerpt: ExcerptCreate, db: Session = Depends(get_db)) -> Exc
 @router.post("/many", response_model=List[ExcerptResponse], status_code=201)
 def create_excerpts(excerpts: List[ExcerptCreate], db: Session = Depends(get_db)) -> List[ExcerptResponse]:
     return list(map(lambda excerpt: create_excerpt(excerpt, db), excerpts))
+
+
+@router.post("/excel", response_model=List[ExcerptResponse], status_code=201)
+def create_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)):
+    if (
+        file.content_type
+        != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ):
+        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+    result = service.create_excerpts_from_excel(db=db, file=file)
+    if not result[0]:
+        raise HTTPException(400, detail=result[1])
+    return result[1]
 
 
 @router.put("/{id}", response_model=ExcerptResponse, status_code=200)
