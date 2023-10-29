@@ -13,13 +13,14 @@ router = APIRouter(
 )
 
 
-@router.get("/{id}", response_model=ExcerptResponse, status_code=200)
-def get_excerpt(id: str, db: Session = Depends(get_db)) -> ExcerptResponse:
-    db_excerpt = service.get_excerpt(db, id)
-    if db_excerpt is None:
-        raise HTTPException(
-            status_code=404, detail=f"Excerpt with id {id} not found")
-    return db_excerpt
+@router.get("/train", response_model=List[ExcerptResponse], status_code=200)
+def get_train_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
+    return service.get_train_excerpts(db)
+
+
+@router.get("/test", response_model=List[ExcerptResponse], status_code=200)
+def get_test_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
+    return service.get_test_excerpts(db)
 
 
 @router.get("/ods/{category}", response_model=List[ExcerptResponse], status_code=200)
@@ -30,14 +31,13 @@ def get_excerpt_by_category(category: int, db: Session = Depends(get_db)) -> Exc
     return service.get_excerpts_by_category(db, category)
 
 
-@router.get("/train", response_model=List[ExcerptResponse], status_code=200)
-def get_train_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
-    return service.get_train_excerpts(db)
-
-
-@router.get("/test", response_model=List[ExcerptResponse], status_code=200)
-def get_test_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
-    return service.get_test_excerpts(db)
+@router.get("/{id}", response_model=ExcerptResponse, status_code=200)
+def get_excerpt(id: str, db: Session = Depends(get_db)) -> ExcerptResponse:
+    db_excerpt = service.get_excerpt(db, id)
+    if db_excerpt is None:
+        raise HTTPException(
+            status_code=404, detail=f"Excerpt with id {id} not found")
+    return db_excerpt
 
 
 @router.get("/", response_model=List[ExcerptResponse], status_code=200)
@@ -51,7 +51,8 @@ def add_train_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFil
         file.content_type
         != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ):
-        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+        raise HTTPException(
+            400, detail="Invalid document type. Document must be an Excel file.")
     result = service.create_train_excerpts_from_excel(db=db, file=file)
     if not result[0]:
         raise HTTPException(400, detail=result[1])
@@ -65,13 +66,13 @@ def add_test_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile
         file.content_type
         != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ):
-        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+        raise HTTPException(
+            400, detail="Invalid document type. Document must be an Excel file.")
     result = service.create_test_excerpts_from_excel(db=db, file=file)
     if not result[0]:
         raise HTTPException(400, detail=result[1])
 
     return result[1]
-
 
 
 @router.post("/", response_model=ExcerptResponse, status_code=201)
@@ -93,7 +94,8 @@ def classify_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile
         file.content_type
         != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ):
-        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+        raise HTTPException(
+            400, detail="Invalid document type. Document must be an Excel file.")
     result = service.create_excerpts_from_excel(db=db, file=file)
     if not result[0]:
         raise HTTPException(400, detail=result[1])

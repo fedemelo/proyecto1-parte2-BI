@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import {
     Typography,
     Grid,
-    Button,    
+    Button,
+    Link
 } from "@mui/material";
 import ClassifyExcel from "../components/ClassifyExcel";
 import ClassifyText from "../components/ClassifyText";
@@ -41,6 +42,13 @@ const MainPage: React.FC = () => {
 
     return (
         <Grid container spacing={2} id="main-grid">
+            <Grid md={12} id="see-details-grid">
+                <Link href='/model'>
+                    <Button variant="contained" id="see-model-button">
+                        Ver los detalles del modelo de aprendizaje automático
+                    </Button>
+                </Link>
+            </Grid>
             <Objective num={6} onClick={() => handleObjectiveClick(6)} />
             <Objective num={7} onClick={() => handleObjectiveClick(7)} />
             <Objective num={16} onClick={() => handleObjectiveClick(16)} />

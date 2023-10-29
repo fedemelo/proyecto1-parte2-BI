@@ -36,7 +36,7 @@ def get_excerpts_by_category(db: Session, category: int) -> List[ExcerptModel]:
 def get_train_excerpts(db: Session) -> List[ExcerptModel]:
     return (
         db.query(ExcerptModel)
-        .filter(ExcerptModel.test_or_train == "train")
+        .filter(ExcerptModel.test_or_train == 'train')
         .all()
     )
 
