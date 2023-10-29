@@ -51,6 +51,7 @@ def create_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile =
     result = service.create_excerpts_from_excel(db=db, file=file)
     if not result[0]:
         raise HTTPException(400, detail=result[1])
+
     return result[1]
 
 

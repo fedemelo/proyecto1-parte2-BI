@@ -42,7 +42,7 @@ def create_excerpt(db: Session, excerpt: ExcerptCreate) -> ExcerptModel:
 
 
 def classify_text(text: str) -> int:
-    return classify_single_text(text) 
+    return classify_single_text(text)
 
 
 def create_excerpts(db: Session, excerpts: List[ExcerptCreate]) -> List[ExcerptModel]:
@@ -51,7 +51,7 @@ def create_excerpts(db: Session, excerpts: List[ExcerptCreate]) -> List[ExcerptM
 
 def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
     df = read_excel(BytesIO(file.file.read()))
-    
+
     if len(df.columns) > 1:
         return (False, "The dataframe must have only one column")
     elif len(df.columns) < 1:
@@ -59,6 +59,7 @@ def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
 
     answ_df = classify_multiple_texts(df)
 
+    excerpts = []
     for _, row in answ_df.iterrows():
         db_excerpt = ExcerptModel(
             id=str(uuid4()),
@@ -68,7 +69,9 @@ def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
         db.add(db_excerpt)
         db.commit()
         db.refresh(db_excerpt)
-    return True, answ_df.to_json()
+        excerpts.append(db_excerpt)
+
+    return (True, excerpts)
 
 
 def update_excerpt(db: Session, id: str, excerpt: ExcerptResponse) -> ExcerptModel:
