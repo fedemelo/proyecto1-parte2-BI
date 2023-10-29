@@ -1,0 +1,5 @@
+#formBox {
+    gap: 5ex;
+    display: flex;
+    flex-direction: column;
+}

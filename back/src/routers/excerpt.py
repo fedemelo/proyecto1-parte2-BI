@@ -36,21 +36,20 @@ def get_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
 
 
 @router.post("/", response_model=ExcerptResponse, status_code=201)
-def create_excerpt(excerpt: ExcerptCreate, db: Session = Depends(get_db)) -> ExcerptResponse:
+def classify_excerpt(excerpt: ExcerptCreate, db: Session = Depends(get_db)) -> ExcerptResponse:
     db_excerpt = service.get_excerpt_by_text(db, excerpt.text)
     if db_excerpt:
-        raise HTTPException(
-            status_code=400, detail="Duplicate excerpt: An excerpt with the given text already exists")
+        return db_excerpt
     return service.create_excerpt(db=db, excerpt=excerpt)
 
 
 @router.post("/many", response_model=List[ExcerptResponse], status_code=201)
-def create_excerpts(excerpts: List[ExcerptCreate], db: Session = Depends(get_db)) -> List[ExcerptResponse]:
-    return list(map(lambda excerpt: create_excerpt(excerpt, db), excerpts))
+def classify_excerpts(excerpts: List[ExcerptCreate], db: Session = Depends(get_db)) -> List[ExcerptResponse]:
+    return list(map(lambda excerpt: classify_excerpt(excerpt, db), excerpts))
 
 
 @router.post("/excel", response_model=List[ExcerptResponse], status_code=201)
-def create_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)):
+def classify_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)):
     if (
         file.content_type
         != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
