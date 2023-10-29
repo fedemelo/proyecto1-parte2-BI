@@ -30,9 +30,48 @@ def get_excerpt_by_category(category: int, db: Session = Depends(get_db)) -> Exc
     return service.get_excerpts_by_category(db, category)
 
 
+@router.get("/train", response_model=List[ExcerptResponse], status_code=200)
+def get_train_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
+    return service.get_train_excerpts(db)
+
+
+@router.get("/test", response_model=List[ExcerptResponse], status_code=200)
+def get_test_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
+    return service.get_test_excerpts(db)
+
+
 @router.get("/", response_model=List[ExcerptResponse], status_code=200)
 def get_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
     return service.get_excerpts(db)
+
+
+@router.post("/train", status_code=201)
+def add_train_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)) -> str:
+    if (
+        file.content_type
+        != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ):
+        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+    result = service.create_train_excerpts_from_excel(db=db, file=file)
+    if not result[0]:
+        raise HTTPException(400, detail=result[1])
+
+    return result[1]
+
+
+@router.post("/test", status_code=201)
+def add_test_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)) -> str:
+    if (
+        file.content_type
+        != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ):
+        raise HTTPException(400, detail="Invalid document type. Document must be an Excel file.")
+    result = service.create_test_excerpts_from_excel(db=db, file=file)
+    if not result[0]:
+        raise HTTPException(400, detail=result[1])
+
+    return result[1]
+
 
 
 @router.post("/", response_model=ExcerptResponse, status_code=201)
@@ -48,8 +87,8 @@ def classify_excerpts(excerpts: List[ExcerptCreate], db: Session = Depends(get_d
     return list(map(lambda excerpt: classify_excerpt(excerpt, db), excerpts))
 
 
-@router.post("/excel", response_model=List[ExcerptResponse], status_code=201)
-def classify_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)):
+@router.post("/excel", status_code=201)
+def classify_excerpts_from_excel(db: Session = Depends(get_db), file: UploadFile = File(...)) -> str:
     if (
         file.content_type
         != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

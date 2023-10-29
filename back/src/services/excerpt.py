@@ -33,6 +33,22 @@ def get_excerpts_by_category(db: Session, category: int) -> List[ExcerptModel]:
     )
 
 
+def get_train_excerpts(db: Session) -> List[ExcerptModel]:
+    return (
+        db.query(ExcerptModel)
+        .filter(ExcerptModel.test_or_train == "train")
+        .all()
+    )
+
+
+def get_test_excerpts(db: Session) -> List[ExcerptModel]:
+    return (
+        db.query(ExcerptModel)
+        .filter(ExcerptModel.test_or_train == "test")
+        .all()
+    )
+
+
 def get_excerpts(db: Session) -> List[ExcerptModel]:
     return db.query(ExcerptModel).all()
 
@@ -47,6 +63,46 @@ def create_excerpt(db: Session, excerpt: ExcerptCreate) -> ExcerptModel:
     db.commit()
     db.refresh(db_excerpt)
     return db_excerpt
+
+
+def create_train_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
+    df = read_excel(BytesIO(file.file.read()))
+
+    if len(df.columns) != 2:
+        return (False, "The dataframe must have exactly two columns")
+
+    for _, row in df.iterrows():
+        db_excerpt = ExcerptModel(
+            id=str(uuid4()),
+            text=row["Textos_espanol"],
+            category=row["sdg"],
+            test_or_train="train"
+        )
+        db.add(db_excerpt)
+        db.commit()
+        db.refresh(db_excerpt)
+
+    return (True, "Train excerpts uploaded successfully")
+
+
+def create_test_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
+    df = read_excel(BytesIO(file.file.read()))
+
+    if len(df.columns) != 2:
+        return (False, "The dataframe must have exactly two columns")
+
+    for _, row in df.iterrows():
+        db_excerpt = ExcerptModel(
+            id=str(uuid4()),
+            text=row["Textos_espanol"],
+            category=row["sdg"],
+            test_or_train="test"
+        )
+        db.add(db_excerpt)
+        db.commit()
+        db.refresh(db_excerpt)
+
+    return (True, "Test excerpts uploaded successfully")
 
 
 def classify_text(text: str) -> int:
@@ -64,6 +120,13 @@ def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
         return (False, "The dataframe must have only one column")
     elif len(df.columns) < 1:
         return (False, "The dataframe must have at least one column")
+    
+    for index, row in df.iterrows():
+        if get_excerpt_by_text(db, row[df.columns[0]]):
+            df.drop(index=index, inplace=True)
+
+    if df.empty:
+        return (True, "All excerpts already exist in the database")
 
     answ_df = classify_multiple_texts(df)
 
@@ -79,7 +142,7 @@ def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
         db.refresh(db_excerpt)
         excerpts.append(db_excerpt)
 
-    return (True, excerpts)
+    return (True, "Excerpts created and classified successfully")
 
 
 def update_excerpt(db: Session, id: str, excerpt: ExcerptResponse) -> ExcerptModel:

@@ -18,6 +18,14 @@ class ExcerptCreate(BaseModel):
     }
 
 
+class ExcerptTest(ExcerptCreate):
+    test_or_train: str = "test"
+
+
+class ExcerptTrain(ExcerptCreate):
+    test_or_train: str = "train"
+
+
 class ExcerptResponse(ExcerptCreate):
     id: str
     category: int
