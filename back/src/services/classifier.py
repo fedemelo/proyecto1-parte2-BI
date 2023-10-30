@@ -50,14 +50,12 @@ def remove_stopwords(words):
 
 
 def preprocessing(text: str) -> str:
-    words = text.split()  # Tokeniza el texto en palabras
-    words = remove_non_ascii(words)
+    words = remove_non_ascii(text)
     words = to_lowercase(words)
     words = replace_numbers(words)
     words = remove_punctuation(words)
     words = remove_stopwords(words)
-    # Une las palabras procesadas en un texto
-    return ' '.join([SnowballStemmer('spanish').stem(word) for word in words])
+    return " ".join([SnowballStemmer('spanish').stem(word) for word in words])
 
 
 def classify_multiple_texts(texts_df: pd.DataFrame) -> pd.DataFrame:
@@ -69,8 +67,8 @@ def classify_multiple_texts(texts_df: pd.DataFrame) -> pd.DataFrame:
         raise Exception("The dataframe must have at least one column")
     
     column_name = df_columns[0]
-    texts_df[column_name] = texts_df[column_name].apply(word_tokenize)
-    new_X = [preprocessing(texto) for texto in texts_df[column_name]]
+    new_X = texts_df[column_name].apply(word_tokenize)
+    new_X = [preprocessing(texto) for texto in new_X]
     pipeline = load('ods_classifier.pkl')
     sdg_column = pipeline.predict(new_X)
     texts_df["sdg"] = sdg_column
