@@ -5,6 +5,12 @@ Integrantes:
 - Federico Melo Barrero, 202021525, f.melo. Sección 1.
 - Shadith Pérez Rivera, 202014687, s.perezr. Sección 2.
 
+## Documentacion
+
+- [Video](https://vimeo.com/879259582/d5c19fd0a5?share=copy) 
+- [Presentacion](https://github.com/fedemelo/proyecto1-parte2-BI/blob/main/docs/Presentacion%20Etapa%202.pdf)
+- [Documento](https://github.com/fedemelo/proyecto1-parte2-BI/blob/main/docs/Proyecto%201%2C%20Etapa%202%20Anal%C3%ADtica%20de%20textos.pdf))
+
 ## Instalación del Backend
 
 ### Requisitos
