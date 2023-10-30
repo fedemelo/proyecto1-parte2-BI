@@ -8,6 +8,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import indicatorsImage from "../public/indicators.png";
 import confusionMatrixImage from "../public/confusion_matrix.png";
+import '../styles/ModelPage.css';
 
 const ModelPage: React.FC = () => {
     const [trainingData, setTrainingData] = useState<{ id: string; text: string; category: number }[]>([]);
@@ -66,6 +67,7 @@ Es especialmente útil en caso de que haya relaciones lineales entre los datos (
                     setSeeTrainingData(true);
                     setSeeTestingData(false);
                 }}
+                id="training-data-button"
             >
                 Ver datos de entrenamiento
             </Button>
@@ -81,6 +83,7 @@ Es especialmente útil en caso de que haya relaciones lineales entre los datos (
                     setSeeTrainingData(false);
                     setSeeTestingData(true);
                 }}
+                id="testing-data-button"
             >
                 Ver datos de pruebas
             </Button>

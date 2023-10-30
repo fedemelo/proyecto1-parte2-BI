@@ -10,7 +10,7 @@ import ClassifyText from "../components/ClassifyText";
 import ods6Image from "../public/ODS6.jpg";
 import ods7Image from "../public/ODS7.jpg";
 import ods16Image from "../public/ODS16.jpg";
-
+import DisplayLog from "../components/DisplayLog";
 import '../styles/MainPage.css';
 
 
@@ -31,11 +31,16 @@ const TextDisplay: React.FC<{ texts: { text: string; id: string; category: numbe
 const MainPage: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [texts, setTexts] = useState<{ text: string; id: string; category: number }[]>([]);
+    const [seeLog, setSeeLog] = useState<boolean>(false);
 
     const handleObjectiveClick = async (category: number) => {
         const response = await fetch(`http://localhost:8000/excerpts/ods/${category}`);
         const data = await response.json();
 
+        // sort data in reverse order
+        data.sort().reverse();
+
+        setSeeLog(false);
         setTexts(data);
         setSelectedCategory(category);
     };
@@ -58,14 +63,21 @@ const MainPage: React.FC = () => {
             <Grid md={6} id="classify-excel-grid">
                 <ClassifyExcel />
             </Grid>
+            <hr />
+            <Grid md={12} id="classify-excel-grid">
+                <Button variant="contained" id="see-model-button" onClick={() => {setSeeLog(true)}} >
+                    Ver el log de todos los textos clasificados
+                </Button>
+            </Grid>
             <Grid md={12} id="show-texts">
-                {selectedCategory !== null && <TextDisplay texts={texts} />}
+                {!seeLog && selectedCategory !== null && <TextDisplay texts={texts} />}
+                {seeLog && <DisplayLog/>}
             </Grid>
         </Grid>
     );
 };
 
-// Objective component
+
 const Objective: React.FC<{ num: number; onClick: () => void }> = ({ num, onClick }) => (
     <Grid md={4}>
         <div id="white-button">

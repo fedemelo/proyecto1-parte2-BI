@@ -1,0 +1,10 @@
+#back-home-button, #training-data-button, #testing-data-button {
+    background-color: #06a1c0;
+    padding: 12px 20px;
+    margin-left: 15px;
+    text-align: center;
+    transition: background-color 0, 5s;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}

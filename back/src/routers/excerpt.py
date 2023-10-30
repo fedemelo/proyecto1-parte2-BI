@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
-from src.schemas.excerpt import ExcerptResponse, ExcerptCreate
+from src.schemas.excerpt import ExcerptResponse, ExcerptCreate, ExcerptLog
 import src.services.excerpt as service
 from src.config.db_settings import get_db
 
@@ -21,6 +21,11 @@ def get_train_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
 @router.get("/test", response_model=List[ExcerptResponse], status_code=200)
 def get_test_excerpts(db: Session = Depends(get_db)) -> List[ExcerptResponse]:
     return service.get_test_excerpts(db)
+
+
+@router.get("/log", response_model=List[ExcerptLog], status_code=200)
+def get_log(db: Session = Depends(get_db)) -> List[ExcerptLog]:
+    return service.get_real_life(db)
 
 
 @router.get("/ods/{category}", response_model=List[ExcerptResponse], status_code=200)

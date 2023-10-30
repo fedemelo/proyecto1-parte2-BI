@@ -1,20 +1,23 @@
 #main-grid {
     margin-left: 5ex;
     display: flex;
-    justify-content: center; /* Centra los elementos horizontalmente */
-    align-items: center; /* Centra los elementos verticalmente */
+    justify-content: center;
+    /* Centra los elementos horizontalmente */
+    align-items: center;
+    /* Centra los elementos verticalmente */
 }
+
 #white-button {
     background-color: white;
     padding: 0;
     justify-content: center;
-    text-align: center; 
-    margin-top: 20px; 
+    text-align: center;
+    margin-top: 20px;
 }
 
 #button-img {
-    max-width: 28cqb; 
-    height: auto; 
+    max-width: 28cqb;
+    height: auto;
 }
 
 #classify-text-grid {
@@ -22,6 +25,17 @@
     text-align: center;
 }
 
-#classify-excel-grid  {
+#classify-excel-grid {
     margin-top: 5ex;
+}
+
+#see-model-button {
+    background-color: #06a1c0;
+    padding: 12px 20px;
+    margin-left: 15px;
+    text-align: center;
+    transition: background-color 0, 5s;
+    color: #fff;
+    border: none;
+    cursor: pointer;
 }

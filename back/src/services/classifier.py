@@ -74,9 +74,11 @@ def classify_multiple_texts(texts_df: pd.DataFrame) -> pd.DataFrame:
     pipeline = load('ods_classifier.pkl')
     sdg_column = pipeline.predict(new_X)
     texts_df["sdg"] = sdg_column
+    texts_df["prep_text"] = new_X
     return texts_df
 
 
 def classify_single_text(text: str) -> int:
     pipeline = load('ods_classifier.pkl')
-    return pipeline.predict([preprocessing(text)])[0]
+    preprocessed_text = preprocessing(text)
+    return pipeline.predict([preprocessed_text])[0], preprocessed_text

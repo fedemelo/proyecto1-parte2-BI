@@ -2,7 +2,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    min-height: 25vh;
+    min-height: 8vh;
   }
   
   /* Estilos para el contenido, que se expandirá para llenar el espacio disponible */

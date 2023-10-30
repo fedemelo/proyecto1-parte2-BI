@@ -53,11 +53,20 @@ def get_excerpts(db: Session) -> List[ExcerptModel]:
     return db.query(ExcerptModel).all()
 
 
+def get_real_life(db: Session) -> List[ExcerptModel]:
+    return (
+        db.query(ExcerptModel)
+        .filter(ExcerptModel.test_or_train == "real-life")
+        .all()
+    )
+
 def create_excerpt(db: Session, excerpt: ExcerptCreate) -> ExcerptModel:
+    predicted_category, preprocessed_text = classify_text(excerpt.text)
     db_excerpt = ExcerptModel(
         id=str(uuid4()),
         text=excerpt.text,
-        category=classify_text(excerpt.text)
+        category=predicted_category,
+        preprocessed_text=preprocessed_text
     )
     db.add(db_excerpt)
     db.commit()
@@ -135,7 +144,8 @@ def create_excerpts_from_excel(db: Session, file: UploadFile) -> (bool, str):
         db_excerpt = ExcerptModel(
             id=str(uuid4()),
             text=row[df.columns[0]],
-            category=row["sdg"]
+            category=row["sdg"],
+            preprocessed_text=row["prep_text"]
         )
         db.add(db_excerpt)
         db.commit()
